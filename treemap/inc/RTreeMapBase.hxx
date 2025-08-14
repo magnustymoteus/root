@@ -26,15 +26,15 @@ public:
 
    struct Vec2 {
       float x, y;
-      Vec2(float x, float y) : x(x), y(y) {}
+      Vec2(float xArg, float yArg) : x(xArg), y(yArg) {}
    };
    struct Rect {
       Vec2 fBottomLeft, fTopRight;
-      Rect(const Vec2 &bottomLeft, const Vec2 &topRight) : fBottomLeft(bottomLeft), fTopRight(topRight) {}
+      Rect(const Vec2 &bottomLeftArg, const Vec2 &topRightArg) : fBottomLeft(bottomLeftArg), fTopRight(topRightArg) {}
    };
    struct RGBColor {
       uint8_t r, g, b, a;
-      RGBColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255) : r(r), g(g), b(b), a(a) {}
+      RGBColor(uint8_t rArg, uint8_t gArg, uint8_t bArg, uint8_t aArg = 255) : r(rArg), g(gArg), b(bArg), a(aArg) {}
    };
    std::vector<Node> fNodes;
    RTreeMapBase() = default;
@@ -45,6 +45,7 @@ protected:
    virtual void AddBox(const Rect &rect, const RGBColor &color, float borderWidth = 0.15f) const = 0;
    virtual void AddText(const Vec2 &pos, const std::string &content, float size,
                         const RGBColor &color = RGBColor(0, 0, 0), bool alignCenter = false) const = 0;
+   virtual ~RTreeMapBase() = default;
 };
 } // namespace ROOT::Experimental
 #endif

@@ -187,8 +187,6 @@ void RTreeMapBase::DrawTreeMap(const RTreeMapBase::Node &element, RTreeMapBase::
    const Vec2 &labelPos = isLeaf ? Vec2((drawRect.fBottomLeft.x + drawRect.fTopRight.x) / 2.0f,
                                         (drawRect.fBottomLeft.y + drawRect.fTopRight.y) / 2.0f)
                                  : Vec2(drawRect.fBottomLeft.x + kPadTextOffset, drawRect.fTopRight.y - kPadTextOffset);
-   bool align = isLeaf ? true : false;
-
    float rectWidth = rect.fTopRight.x - rect.fBottomLeft.x;
    float rectHeight = rect.fTopRight.y - rect.fBottomLeft.y;
    float textSize = std::min(std::min(rectWidth, rectHeight) * 0.1f, kTextSizeFactor);
@@ -211,7 +209,7 @@ void RTreeMapBase::DrawTreeMap(const RTreeMapBase::Node &element, RTreeMapBase::
       float height = innerRect.fTopRight.y - innerRect.fBottomLeft.y;
       bool horizontalRows = width > height;
       auto childRects = SquarifyChildren(children, innerRect, horizontalRows, totalSize);
-      for (const auto &[child, rect] : childRects)
-         DrawTreeMap(child, rect, depth + 1);
+      for (const auto &[child, childRect] : childRects)
+         DrawTreeMap(child, childRect, depth + 1);
    }
 }

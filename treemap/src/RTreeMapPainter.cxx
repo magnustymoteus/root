@@ -29,8 +29,8 @@ void ROOT::Experimental::RTreeMapPainter::AddBox(const Rect &rect, const RGBColo
    box->SetLineWidth(std::ceil(borderWidth));
    box->Draw("l");
 }
-void ROOT::Experimental::RTreeMapPainter::AddText(const Vec2 &pos, const std::string &content, float size, const RGBColor &color,
-                       bool alignCenter) const
+void ROOT::Experimental::RTreeMapPainter::AddText(const Vec2 &pos, const std::string &content, float size,
+                                                  const RGBColor &color, bool alignCenter) const
 {
    TLatex t;
    t.SetTextFont(42);
