@@ -381,12 +381,10 @@ class RTreeMapPainter extends ObjectPainter {
       }
       return this;
    }
+   static async draw(dom, obj, opt) {
+      const painter = new RTreeMapPainter(dom, obj, opt);
+      return ensureTCanvas(painter, false).then(() => painter.redraw());
+   }
 }
-
-RTreeMapPainter.draw = function(dom, obj, opt) {
-   const painter = new RTreeMapPainter(dom, obj, opt);
-   return ensureTCanvas(painter, false).then(() => painter.redraw());
-};
 export {RTreeMapPainter};
-import {addDrawFunc} from 'jsroot';
 

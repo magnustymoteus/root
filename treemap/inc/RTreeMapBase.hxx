@@ -38,6 +38,7 @@ public:
    };
    std::vector<Node> fNodes;
    RTreeMapBase() = default;
+   virtual ~RTreeMapBase() = default;
 
 protected:
    void DrawTreeMap(const Node &elem, Rect rect, int depth) const;
@@ -45,7 +46,6 @@ protected:
    virtual void AddBox(const Rect &rect, const RGBColor &color, float borderWidth = 0.15f) const = 0;
    virtual void AddText(const Vec2 &pos, const std::string &content, float size,
                         const RGBColor &color = RGBColor(0, 0, 0), bool alignCenter = false) const = 0;
-   virtual ~RTreeMapBase() = default;
 };
 } // namespace ROOT::Experimental
 #endif

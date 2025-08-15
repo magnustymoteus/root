@@ -10,6 +10,7 @@
 #include "TClass.h"
 
 #include "RFieldProvider.hxx"
+#include "RVisualizationProvider.hxx"
 
 
 // ==============================================================================================
@@ -22,7 +23,10 @@
 \warning This is part of the ROOT 7 prototype! It will change without notice. It might trigger earthquakes. Feedback is welcome!
 */
 
-class RNTupleDraw6Provider : public RFieldProvider {
+class RNTupleDraw6Provider : public RProvider {
+private:
+   RFieldProvider fieldProvider;
+   RVisualizationProvider visualizationProvider;
 
 public:
 
@@ -30,15 +34,27 @@ public:
    {
       RegisterDraw6(TClass::GetClass<ROOT::RNTuple>(),
                     [this](TVirtualPad *pad, std::unique_ptr<RHolder> &obj, const std::string &opt) -> bool {
-                       auto h1 = DrawField(dynamic_cast<RFieldHolder *>(obj.get()));
-                       if (!h1)
-                          return false;
 
-                       pad->Add(h1, opt.c_str());
+                       auto visHolder = dynamic_cast<RVisualizationHolder *>(obj.get());
+                       if (visHolder) {
+                          auto treeMap = visualizationProvider.CreateTreeMap(visHolder);
+                          if (!treeMap)
+                             return false;
 
-                       return true;
+                          pad->Add(treeMap, opt.c_str());
+                          return true;
+                       }
+
+                       auto fieldHolder = dynamic_cast<RFieldHolder *>(obj.get());
+                       if (fieldHolder) {
+                          auto h1 = fieldProvider.DrawField(fieldHolder);
+                          if (!h1)
+                             return false;
+
+                          pad->Add(h1, opt.c_str());
+                          return true;
+                       }
+                       return false;
                     });
    }
-
 } newRNTupleDraw6Provider;
-

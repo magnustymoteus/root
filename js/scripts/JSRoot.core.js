@@ -130,6 +130,8 @@ function v6_require(need) {
             // copy hist painter objects into JSROOT
             Object.assign(globalThis.JSROOT, arr[0], arr[1], arr[2]);
          }));
+      else if (name == 'treemap')
+         arr.push(import('../modules/treemap/RTreeMapPainter.mjs'));
       else if (name == 'more')
          arr.push(import('../modules/draw/more.mjs'));
       else if (name == 'gpad')
