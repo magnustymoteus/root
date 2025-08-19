@@ -46,7 +46,8 @@ class RTreeMapPainter extends ObjectPainter {
       super(dom, obj, opt);
       this.tooltip = new RTreeMapTooltip(this);
       this.rootIndex = 0;
-      this.parentIndices = []
+      this.parentIndices = [];
+      this.getPadPainter().getLayerSvg('primitives_layer').select('g.root_frame path').remove();
    }
 
    appendRect(begin, end, color, strokeColor = RTreeMapPainter.CONSTANTS.STROKE_COLOR,
@@ -378,10 +379,11 @@ class RTreeMapPainter extends ObjectPainter {
       }
       return this;
    }
-   static async draw(dom, obj, opt) {
+   
+   static async draw(dom, obj, opt)
+   {
       const painter = new RTreeMapPainter(dom, obj, opt);
       return ensureTCanvas(painter, false).then(() => painter.redraw());
    }
 }
 export {RTreeMapPainter};
-
