@@ -41,7 +41,7 @@ public:
                           if (!treeMap)
                              return false;
 
-                          pad->Add(treeMap, opt.c_str());
+                          pad->Add(treeMap.release(), opt.c_str());
                           return true;
                        }
 

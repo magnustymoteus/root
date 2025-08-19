@@ -8,7 +8,6 @@
 #include <ROOT/Browsable/RProvider.hxx>
 
 #include "RVisualizationHolder.hxx"
-#include "RTreeMapImporter.hxx"
 #include "RTreeMapPainter.hxx"
 
 /** \class RVisualizationProvider
@@ -21,18 +20,13 @@
 class RVisualizationProvider : public RProvider {
 public:
    /** Create TreeMap visualization for RNTuple */
-   ROOT::Experimental::RTreeMapPainter *CreateTreeMap(RVisualizationHolder *holder) const
+   std::unique_ptr<ROOT::Experimental::RTreeMapPainter> CreateTreeMap(RVisualizationHolder *holder) const
    {
       if (!holder)
          return nullptr;
 
-      auto importer = ROOT::Experimental::RTreeMapImporter::Create(
+      return ROOT::Experimental::RTreeMapPainter::Import(
             holder->GetFileName(), holder->GetTupleName());
-
-      if (!importer)
-         return nullptr;
-
-      return importer->Import();
    }
 };
 

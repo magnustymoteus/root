@@ -1,7 +1,6 @@
 ROOT_STANDARD_LIBRARY_PACKAGE(TreeMap
   HEADERS
     RTreeMapBase.hxx
-    RTreeMapImporter.hxx
     RTreeMapPainter.hxx
   SOURCES
     RTreeMapBase.cxx

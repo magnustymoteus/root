@@ -46,7 +46,7 @@ public:
                              return false;
 
                           std::shared_ptr<ROOT::Experimental::RTreeMapPainter> shared;
-                          shared.reset(treeMap);
+                          shared.reset(treeMap.release());
 
                           subpad->Draw<ROOT::Experimental::TObjectDrawable>(shared, opt);
                           return true;
