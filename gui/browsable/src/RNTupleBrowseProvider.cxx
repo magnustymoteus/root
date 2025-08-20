@@ -270,13 +270,8 @@ public:
       if (fHasVisualization && fCounter == 0) {
          return "Visualization";
       }
-
       int fieldIndex = fHasVisualization ? fCounter - 1 : fCounter;
-      if (fieldIndex >= 0 && fieldIndex < (int)fProvidedFieldIds.size()) {
-         return fNtplReader->GetDescriptor().GetFieldDescriptor(fProvidedFieldIds[fieldIndex]).GetFieldName();
-      }
-
-      return "";
+      return fNtplReader->GetDescriptor().GetFieldDescriptor(fProvidedFieldIds[fieldIndex]).GetFieldName();
    }
 
    bool CanItemHaveChilds() const override
@@ -284,14 +279,9 @@ public:
       if (fHasVisualization && fCounter == 0) {
          return false;
       }
-
       int fieldIndex = fHasVisualization ? fCounter - 1 : fCounter;
-      if (fieldIndex >= 0 && fieldIndex < (int)fActualFieldIds.size()) {
-         auto subrange = fNtplReader->GetDescriptor().GetFieldIterable(fActualFieldIds[fieldIndex]);
-         return subrange.begin() != subrange.end();
-      }
-
-      return false;
+      auto subrange = fNtplReader->GetDescriptor().GetFieldIterable(fActualFieldIds[fieldIndex]);
+      return subrange.begin() != subrange.end();
    }
 
    /** Create element for the browser */
@@ -304,23 +294,19 @@ public:
       }
 
       int fieldIndex = fHasVisualization ? fCounter - 1 : fCounter;
-      if (fieldIndex >= 0 && fieldIndex < (int)fProvidedFieldIds.size()) {
-         int nchilds = 0;
-         for (auto &sub : fNtplReader->GetDescriptor().GetFieldIterable(fActualFieldIds[fieldIndex])) {
-            (void)sub;
-            nchilds++;
-         }
-
-         const auto &field = fNtplReader->GetDescriptor().GetFieldDescriptor(fProvidedFieldIds[fieldIndex]);
-
-         auto item = std::make_unique<RItem>(field.GetFieldName(), nchilds,
-                                           nchilds > 0 ? "sap-icon://split" : "sap-icon://e-care");
-
-         item->SetTitle("RField name "s + field.GetFieldName() + " type "s + field.GetTypeName());
-         return item;
+      int nchilds = 0;
+      for (auto &sub : fNtplReader->GetDescriptor().GetFieldIterable(fActualFieldIds[fieldIndex])) {
+         (void)sub;
+         nchilds++;
       }
 
-      return nullptr;
+      const auto &field = fNtplReader->GetDescriptor().GetFieldDescriptor(fProvidedFieldIds[fieldIndex]);
+
+      auto item = std::make_unique<RItem>(field.GetFieldName(), nchilds,
+                                           nchilds > 0 ? "sap-icon://split" : "sap-icon://e-care");
+
+      item->SetTitle("RField name "s + field.GetFieldName() + " type "s + field.GetTypeName());
+      return item;
    }
 
    std::shared_ptr<RElement> GetElement() override
@@ -330,12 +316,8 @@ public:
       }
 
       int fieldIndex = fHasVisualization ? fCounter - 1 : fCounter;
-      if (fieldIndex >= 0 && fieldIndex < (int)fProvidedFieldIds.size()) {
-         const auto name = fNtplReader->GetDescriptor().GetFieldDescriptor(fProvidedFieldIds[fieldIndex]).GetFieldName();
-         return std::make_shared<RFieldElement>(fNtplReader, fParentName, fActualFieldIds[fieldIndex], name);
-      }
-
-      return nullptr;
+      const auto name = fNtplReader->GetDescriptor().GetFieldDescriptor(fProvidedFieldIds[fieldIndex]).GetFieldName();
+      return std::make_shared<RFieldElement>(fNtplReader, fParentName, fActualFieldIds[fieldIndex], name);
    }
 };
 
