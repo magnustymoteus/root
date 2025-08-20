@@ -10,6 +10,10 @@ class RTreeMapTooltip {
       this.y = 0;
    }
 
+   cleanup() {
+      document.body.removeChild(this.tooltip);
+   }
+
    createTooltip()
    {
       if (this.tooltip)
