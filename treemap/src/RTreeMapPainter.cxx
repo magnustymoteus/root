@@ -18,6 +18,7 @@ void ROOT::Experimental::RTreeMapPainter::Paint(Option_t *)
    gPad->Clear();
    gPad->Range(0, 0, 1, 1);
    gPad->cd();
+   gPad->SetEditable(kFALSE);
    DrawTreeMap(fNodes[0], Rect(Vec2(0.025, 0.05), Vec2(0.825, 0.9)), 0);
    DrawLegend();
 }
