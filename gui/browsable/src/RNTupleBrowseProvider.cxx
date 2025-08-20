@@ -26,42 +26,41 @@ class TObjectDrawable;
 using namespace std::string_literals;
 using namespace ROOT::Browsable;
 
-
 // ==============================================================================================
-/** \class RVisualizationElement
+/** \class RTreeMapElement
 \ingroup rbrowser
-\brief Browsing element representing visualization placeholder for RNTuple
+\brief Browsing element representing TreeMap visualization for RNTuple
 \author Patryk Pilichowski
 \date 2025
 \warning This is part of the ROOT 7 prototype! It will change without notice. It might trigger earthquakes. Feedback is welcome!
 */
 
-class RVisualizationElement : public RElement {
+class RTreeMapElement : public RElement {
 protected:
    std::shared_ptr<ROOT::RNTupleReader> fNtplReader;
    std::string fFileName;
 
 public:
-   RVisualizationElement(std::shared_ptr<ROOT::RNTupleReader> ntplReader, const std::string &fileName = "")
+   RTreeMapElement(std::shared_ptr<ROOT::RNTupleReader> ntplReader, const std::string &fileName = "")
       : RElement(), fNtplReader(ntplReader), fFileName(fileName)
    {
    }
 
-   ~RVisualizationElement() override = default;
+   ~RTreeMapElement() override = default;
 
-   /** Name of visualization placeholder */
+   /** Name of TreeMap visualization */
    std::string GetName() const override
    {
-      return "Visualization";
+      return "TreeMap";
    }
 
-   /** Title of visualization placeholder */
+   /** Title of TreeMap visualization */
    std::string GetTitle() const override
    {
       return "TreeMap visualization of RNTuple structure and disk usage";
    }
 
-   /** No children for visualization placeholder */
+   /** No children for TreeMap visualization */
    std::unique_ptr<RLevelIter> GetChildsIter() override
    {
       return nullptr;
@@ -91,10 +90,10 @@ public:
       return false;
    }
 
-   /** Create item with visualization icon */
+   /** Create item with TreeMap icon */
    std::unique_ptr<RItem> CreateItem() const override
    {
-      auto item = std::make_unique<RItem>(GetName(), 0, "sap-icon://show");
+      auto item = std::make_unique<RItem>(GetName(), 0, "sap-icon://Chart-Tree-Map");
       item->SetTitle(GetTitle());
       return item;
    }
@@ -105,6 +104,138 @@ public:
    /** Set filename for treemap creation */
    void SetFileName(const std::string &fileName) { fFileName = fileName; }
 };
+
+// ==============================================================================================
+/** \class RVisualizationElement
+\ingroup rbrowser
+\brief Browsing element representing visualization folder for RNTuple
+\author Patryk Pilichowski
+\date 2025
+\warning This is part of the ROOT 7 prototype! It will change without notice. It might trigger earthquakes. Feedback is welcome!
+*/
+
+class RVisualizationElement : public RElement {
+protected:
+   std::shared_ptr<ROOT::RNTupleReader> fNtplReader;
+   std::string fFileName;
+
+public:
+   RVisualizationElement(std::shared_ptr<ROOT::RNTupleReader> ntplReader, const std::string &fileName = "")
+      : RElement(), fNtplReader(ntplReader), fFileName(fileName)
+   {
+   }
+
+   ~RVisualizationElement() override = default;
+
+   /** Name of visualization folder */
+   std::string GetName() const override
+   {
+      return "Visualization";
+   }
+
+   /** Title of visualization folder */
+   std::string GetTitle() const override
+   {
+      return "Visualization tools and options for RNTuple data";
+   }
+
+   /** Create iterator for visualization children */
+   std::unique_ptr<RLevelIter> GetChildsIter() override;
+
+   /** Return class of RNTuple for consistency */
+   const TClass *GetClass() const { return TClass::GetClass<ROOT::RNTuple>(); }
+
+   /** No direct object for folder */
+   std::unique_ptr<RHolder> GetObject() override
+   {
+      return nullptr;
+   }
+
+   /** Default action is none for folder */
+   EActionKind GetDefaultAction() const override
+   {
+      return kActNone;
+   }
+
+   /** Create item with visualization folder icon */
+   std::unique_ptr<RItem> CreateItem() const override
+   {
+      auto item = std::make_unique<RItem>(GetName(), 1, "sap-icon://show");
+      item->SetTitle(GetTitle());
+      return item;
+   }
+
+   /** This is a folder */
+   bool IsFolder() const override { return true; }
+
+   /** Set filename for child elements */
+   void SetFileName(const std::string &fileName) { fFileName = fileName; }
+};
+
+// ==============================================================================================
+/** \class RVisualizationIterator
+\ingroup rbrowser
+\brief Iterator over visualization options
+\author Patryk Pilichowski
+\date 2025
+\warning This is part of the ROOT 7 prototype! It will change without notice. It might trigger earthquakes. Feedback is welcome!
+*/
+
+class RVisualizationIterator : public RLevelIter {
+   std::shared_ptr<ROOT::RNTupleReader> fNtplReader;
+   std::string fFileName;
+   int fCounter{-1};
+   int fTotalItems{1}; // currently only treemap
+
+public:
+   RVisualizationIterator(std::shared_ptr<ROOT::RNTupleReader> ntplReader, const std::string &fileName = "")
+      : fNtplReader(ntplReader), fFileName(fileName)
+   {
+   }
+
+   ~RVisualizationIterator() override = default;
+
+   bool Next() override {
+      return ++fCounter < fTotalItems;
+   }
+
+   std::string GetItemName() const override
+   {
+      if (fCounter == 0) {
+         return "TreeMap";
+      }
+      return "";
+   }
+
+   bool CanItemHaveChilds() const override
+   {
+      return false;
+   }
+
+   /** Create item for the browser */
+   std::unique_ptr<RItem> CreateItem() override
+   {
+      if (fCounter == 0) {
+         auto item = std::make_unique<RItem>("TreeMap", 0, "sap-icon://Chart-Tree-Map");
+         item->SetTitle("TreeMap visualization of RNTuple structure and disk usage");
+         return item;
+      }
+      return nullptr;
+   }
+
+   std::shared_ptr<RElement> GetElement() override
+   {
+      if (fCounter == 0) {
+         return std::make_shared<RTreeMapElement>(fNtplReader, fFileName);
+      }
+      return nullptr;
+   }
+};
+
+std::unique_ptr<RLevelIter> RVisualizationElement::GetChildsIter()
+{
+   return std::make_unique<RVisualizationIterator>(fNtplReader, fFileName);
+}
 
 // ==============================================================================================
 
@@ -277,7 +408,7 @@ public:
    bool CanItemHaveChilds() const override
    {
       if (fHasVisualization && fCounter == 0) {
-         return false;
+         return true;
       }
       int fieldIndex = fHasVisualization ? fCounter - 1 : fCounter;
       auto subrange = fNtplReader->GetDescriptor().GetFieldIterable(fActualFieldIds[fieldIndex]);
@@ -288,7 +419,7 @@ public:
    std::unique_ptr<RItem> CreateItem() override
    {
       if (fHasVisualization && fCounter == 0) {
-         auto item = std::make_unique<RItem>("Visualization", 0, "sap-icon://show");
+         auto item = std::make_unique<RItem>("Visualization", 1, "sap-icon://show");
          item->SetTitle("Visualization tools and options for RNTuple data");
          return item;
       }

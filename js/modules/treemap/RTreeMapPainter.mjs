@@ -47,11 +47,12 @@ class RTreeMapPainter extends ObjectPainter {
       this.tooltip = new RTreeMapTooltip(this);
       this.rootIndex = 0;
       this.parentIndices = [];
-      this.getPadPainter().getLayerSvg('primitives_layer').select('g.root_frame path').remove();
+      this.getPadPainter().getLayerSvg('primitives_layer').select('g.root_frame path').attr("visibility", "hidden");
    }
 
 
    cleanup() {
+      this.getPadPainter().getLayerSvg('primitives_layer').select('g.root_frame path').attr("visibility", "visible");
       this.tooltip.cleanup();
       super.cleanup();
    }

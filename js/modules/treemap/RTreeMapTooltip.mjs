@@ -11,7 +11,7 @@ class RTreeMapTooltip {
    }
 
    cleanup() {
-      document.body.removeChild(this.tooltip);
+      if(this.tooltip !== null) document.body.removeChild(this.tooltip);
    }
 
    createTooltip()
