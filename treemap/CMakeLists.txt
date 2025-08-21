@@ -24,13 +24,6 @@ ROOT_STANDARD_LIBRARY_PACKAGE(ROOTTreeMap
     RIO
 )
 
-# Function used in test/ to add unitest executables.
-function(TREEMAP_ADD_GTEST name source)
-  ROOT_ADD_GTEST(${name} ${source} LIBRARIES ROOTTreeMap)
-endfunction()
-
-ROOT_ADD_TEST_SUBDIRECTORY(test)
-
 if(clad)
   target_compile_definitions(ROOTTreeMap PUBLIC ROOT_SUPPORT_CLAD)
 endif()
