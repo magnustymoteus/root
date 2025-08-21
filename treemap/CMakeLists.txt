@@ -1,7 +1,18 @@
-ROOT_STANDARD_LIBRARY_PACKAGE(TreeMap
+# Copyright (C) 1995-2025, Rene Brun and Fons Rademakers.
+# All rights reserved.
+#
+# For the licensing terms see $ROOTSYS/LICENSE.
+# For the list of contributors see $ROOTSYS/README/CREDITS.
+
+############################################################################
+# CMakeLists.txt file for building ROOT treemap package
+# @author Patryk Tymoteusz Pilichowski CERN
+############################################################################
+
+ROOT_STANDARD_LIBRARY_PACKAGE(ROOTTreeMap
   HEADERS
-    RTreeMapBase.hxx
-    RTreeMapPainter.hxx
+    ROOT/RTreeMapBase.hxx
+    ROOT/RTreeMapPainter.hxx
   SOURCES
     RTreeMapBase.cxx
     RTreeMapImporter.cxx
@@ -13,8 +24,13 @@ ROOT_STANDARD_LIBRARY_PACKAGE(TreeMap
     RIO
 )
 
-#ROOT_ADD_TEST_SUBDIRECTORY(test)
+# Function used in test/ to add unitest executables.
+function(TREEMAP_ADD_GTEST name source)
+  ROOT_ADD_GTEST(${name} ${source} LIBRARIES ROOTTreeMap)
+endfunction()
+
+ROOT_ADD_TEST_SUBDIRECTORY(test)
 
 if(clad)
-  target_compile_definitions(TreeMap PUBLIC ROOT_SUPPORT_CLAD)
+  target_compile_definitions(ROOTTreeMap PUBLIC ROOT_SUPPORT_CLAD)
 endif()

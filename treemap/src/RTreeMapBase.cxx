@@ -1,7 +1,19 @@
-//
-// Created by patryk on 08.08.25.
-//
-#include "RTreeMapBase.hxx"
+/// \file RTreeMapBase.cxx
+/// \ingroup TreeMap ROOT7
+/// \author Patryk Tymoteusz Pilichowski <patryk.tymoteusz.pilichowski@cern.ch>
+/// \date 2025-08-21
+/// \warning This is part of the ROOT 7 prototype! It will change without notice. It might trigger earthquakes. Feedback
+/// is welcome!
+
+/*************************************************************************
+ * Copyright (C) 1995-2025, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
+
+#include "../inc/ROOT/RTreeMapBase.hxx"
 
 #include <cmath>
 #include <iomanip>
@@ -189,7 +201,6 @@ void RTreeMapBase::DrawTreeMap(const RTreeMapBase::Node &element, RTreeMapBase::
    const Vec2 &labelPos = isLeaf ? Vec2((drawRect.fBottomLeft.x + drawRect.fTopRight.x) / 2.0f,
                                         (drawRect.fBottomLeft.y + drawRect.fTopRight.y) / 2.0f)
                                  : Vec2(drawRect.fBottomLeft.x + kPadTextOffset, drawRect.fTopRight.y - kPadTextOffset);
-   bool align = isLeaf ? true : false;
 
    float rectWidth = rect.fTopRight.x - rect.fBottomLeft.x;
    float rectHeight = rect.fTopRight.y - rect.fBottomLeft.y;
@@ -213,7 +224,7 @@ void RTreeMapBase::DrawTreeMap(const RTreeMapBase::Node &element, RTreeMapBase::
       float height = innerRect.fTopRight.y - innerRect.fBottomLeft.y;
       bool horizontalRows = width > height;
       auto childRects = SquarifyChildren(children, innerRect, horizontalRows, totalSize);
-      for (const auto &[child, rect] : childRects)
-         DrawTreeMap(child, rect, depth + 1);
+      for (const auto &[child, childRect] : childRects)
+         DrawTreeMap(child, childRect, depth + 1);
    }
 }
