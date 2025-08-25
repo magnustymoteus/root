@@ -120,28 +120,26 @@ class RTreeMapPainter extends ObjectPainter {
          this.tooltip.showTooltip();
       };
       const click = () => {
-         if (node.fNChildren > 0) {
-            const obj = this.getObject();
-            const nodeIndex = obj.fNodes.findIndex((elem) => elem === node);
-            if (nodeIndex === this.rootIndex)
-               this.rootIndex = 0;
-            else
-               this.rootIndex = nodeIndex;
-            this.redraw();
-         }
-      };
-      const contextMenu = (e) => {
-         e.preventDefault();
          const obj = this.getObject();
-         this.rootIndex = this.parentIndices[obj.fNodes.findIndex((elem) => elem === node)];
+         const nodeIndex = obj.fNodes.findIndex((elem) => elem === node);
+         if(nodeIndex === this.rootIndex) {
+            this.rootIndex = this.parentIndices[nodeIndex];
+         }
+         else {
+            let parentIndex = nodeIndex;
+            while (this.parentIndices[parentIndex] !== this.rootIndex) {
+               parentIndex = this.parentIndices[parentIndex];
+            }
+            this.rootIndex = parentIndex;
+            if(obj.fNodes[parentIndex].fNChildren === 0) this.rootIndex = this.parentIndices[nodeIndex];
+         }
          this.redraw();
       };
       this.attachPointerEvents(element, {
          'mouseenter' : mouseEnter,
          'mouseleave' : mouseLeave,
          'mousemove' : mouseMove,
-         'click' : click,
-         'contextmenu' : contextMenu
+         'click' : click
       });
    }
 
@@ -371,6 +369,18 @@ class RTreeMapPainter extends ObjectPainter {
       })
    }
 
+   getDirectory()
+   {
+      const obj = this.getObject();
+      let result = "";
+      let currentIndex = this.rootIndex;
+      while(currentIndex !== 0) {
+         result = obj.fNodes[currentIndex].fName + "/" + result;
+         currentIndex = this.parentIndices[currentIndex];
+      }
+      return result;
+   }
+
    redraw()
    {
       const obj = this.getObject();
@@ -384,6 +394,8 @@ class RTreeMapPainter extends ObjectPainter {
             obj.fNodes[this.rootIndex],
             {bottomLeft : {x : mainArea.LEFT, y : mainArea.BOTTOM}, topRight : {x : mainArea.RIGHT, y : mainArea.TOP}});
          this.drawLegend();
+         this.appendText(this.getDirectory(), {x : RTreeMapPainter.CONSTANTS.MAIN_TREEMAP.LEFT, y : RTreeMapPainter.CONSTANTS.MAIN_TREEMAP.TOP+0.01},
+             RTreeMapPainter.CONSTANTS.TEXT.SIZE_VW, "black");
       }
       return this;
    }
