@@ -57,7 +57,8 @@ public:
    /** Title of TreeMap visualization */
    std::string GetTitle() const override
    {
-      return "TreeMap visualization of RNTuple structure and disk usage";
+      return "TreeMap visualization of RNTuple structure and disk usage\nLeft click: Either scopes in or out by 1 "
+             "level";
    }
 
    /** No children for TreeMap visualization */
@@ -217,7 +218,8 @@ public:
    {
       if (fCounter == 0) {
          auto item = std::make_unique<RItem>("TreeMap", 0, "sap-icon://Chart-Tree-Map");
-         item->SetTitle("TreeMap visualization of RNTuple structure and disk usage");
+         item->SetTitle("TreeMap visualization of RNTuple structure and disk usage\nLeft click: Either scopes in "
+                        "or out by 1 level");
          return item;
       }
       return nullptr;
