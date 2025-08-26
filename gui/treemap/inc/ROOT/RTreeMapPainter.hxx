@@ -26,6 +26,7 @@
 #include <vector>
 
 namespace ROOT::Experimental {
+class RNTupleInspector;
 
 // clang-format off
 /**
@@ -38,7 +39,11 @@ class RTreeMapPainter final : public ROOT::Experimental::RTreeMapBase, public TO
 public:
 
    /////////////////////////////////////////////////////////////////////////////
-   /// \brief Logic for converting an RNTuple to RTreeMapPainter
+   /// \brief Logic for converting an RNTuple to RTreeMapPainter given RNTupleInspector
+   static std::unique_ptr<RTreeMapPainter> Import(const ROOT::Experimental::RNTupleInspector &insp);
+
+   /////////////////////////////////////////////////////////////////////////////
+   /// \brief Logic for converting an RNTuple to RTreeMapPainter given file and tuple names
    static std::unique_ptr<RTreeMapPainter> Import(std::string_view sourceFileName, std::string_view tupleName);
 
    struct Node final : public ROOT::Experimental::RTreeMapBase::Node, public TObject {
@@ -50,7 +55,7 @@ public:
 
    ClassDefOverride(RTreeMapPainter, 1);
 
-   ~RTreeMapPainter() = default;
+   ~RTreeMapPainter() override = default;
 
 private:
    /////////////////////////////////////////////////////////////////////////////

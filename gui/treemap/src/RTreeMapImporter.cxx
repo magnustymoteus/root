@@ -27,28 +27,26 @@ static RTreeMapBase::Node CreateNode(const RNTupleInspector &insp, const ROOT::R
 {
    uint64_t size =
       (rootId != fldDesc.GetId()) ? insp.GetFieldTreeInspector(fldDesc.GetId()).GetCompressedSize() : rootSize;
-   return RTreeMapBase::Node(fldDesc.GetFieldName(), "", size, childrenIdx, nChildren);
+   return {fldDesc.GetFieldName(), "", size, childrenIdx, nChildren};
 }
 
 static RTreeMapBase::Node CreateNode(const RNTupleInspector::RColumnInspector &colInsp, std::uint64_t childrenIdx)
 {
-   return RTreeMapBase::Node("", ROOT::Internal::RColumnElementBase::GetColumnTypeName(colInsp.GetType()),
-                             colInsp.GetCompressedSize(), childrenIdx, 0);
+   return {"", ROOT::Internal::RColumnElementBase::GetColumnTypeName(colInsp.GetType()),
+                             colInsp.GetCompressedSize(), childrenIdx, 0};
 }
-
-std::unique_ptr<RTreeMapPainter> RTreeMapPainter::Import(std::string_view sourceFileName, std::string_view tupleName)
+std::unique_ptr<RTreeMapPainter> RTreeMapPainter::Import(const ROOT::Experimental::RNTupleInspector &insp)
 {
    auto treemap = std::make_unique<RTreeMapPainter>();
-   const auto insp = RNTupleInspector::Create(tupleName, sourceFileName);
-   const auto &descriptor = insp->GetDescriptor();
+   const auto &descriptor = insp.GetDescriptor();
    const auto rootId = descriptor.GetFieldZero().GetId();
    size_t rootSize = 0;
    for (const auto &childId : descriptor.GetFieldDescriptor(rootId).GetLinkIds()) {
-      rootSize += insp->GetFieldTreeInspector(childId).GetCompressedSize();
+      rootSize += insp.GetFieldTreeInspector(childId).GetCompressedSize();
    }
 
    std::queue<std::pair<uint64_t, bool>> queue; // (columnid/fieldid, isfield)
-   queue.push({rootId, true});
+   queue.emplace(rootId, true);
    while (!queue.empty()) {
       size_t levelSize = queue.size();
       size_t levelChildrenStart = treemap->fNodes.size() + levelSize;
@@ -56,24 +54,24 @@ std::unique_ptr<RTreeMapPainter> RTreeMapPainter::Import(std::string_view source
          const auto &current = queue.front();
          queue.pop();
 
-         std::vector<uint64_t> children;
          size_t nChildren = 0;
          if (current.second) {
+            std::vector<uint64_t> children;
             const auto &fldDesc = descriptor.GetFieldDescriptor(current.first);
             children = fldDesc.GetLinkIds();
             for (const auto childId : children) {
-               queue.push({childId, 1});
+               queue.emplace(childId, 1);
             }
             for (const auto &columnDesc : descriptor.GetColumnIterable(fldDesc.GetId())) {
                const auto &columnId = columnDesc.GetPhysicalId();
                children.push_back(columnId);
-               queue.push({columnId, 0});
+               queue.emplace(columnId, 0);
             }
             nChildren = children.size();
-            const auto &node = CreateNode(*insp, fldDesc, levelChildrenStart, nChildren, rootId, rootSize);
+            const auto &node = CreateNode(insp, fldDesc, levelChildrenStart, nChildren, rootId, rootSize);
             treemap->fNodes.push_back(node);
          } else {
-            const auto &colInsp = insp->GetColumnInspector(current.first);
+            const auto &colInsp = insp.GetColumnInspector(current.first);
             const auto &node = CreateNode(colInsp, levelChildrenStart);
             treemap->fNodes.push_back(node);
          }
@@ -82,4 +80,9 @@ std::unique_ptr<RTreeMapPainter> RTreeMapPainter::Import(std::string_view source
       }
    }
    return treemap;
+}
+std::unique_ptr<RTreeMapPainter> RTreeMapPainter::Import(std::string_view sourceFileName, std::string_view tupleName)
+{
+   auto insp = RNTupleInspector::Create(tupleName, sourceFileName);
+   return RTreeMapPainter::Import(*insp);
 }
