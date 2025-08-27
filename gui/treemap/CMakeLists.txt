@@ -23,7 +23,3 @@ ROOT_STANDARD_LIBRARY_PACKAGE(ROOTTreeMap
     Gpad
     RIO
 )
-
-if(clad)
-  target_compile_definitions(ROOTTreeMap PUBLIC ROOT_SUPPORT_CLAD)
-endif()
