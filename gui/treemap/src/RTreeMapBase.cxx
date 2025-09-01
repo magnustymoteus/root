@@ -153,7 +153,7 @@ SquarifyChildren(const std::vector<RTreeMapBase::Node> &children, RTreeMapBase::
    }
    return result;
 }
-/* */
+
 void RTreeMapBase::DrawLegend() const
 {
    const auto diskOccupation = GetDiskOccupation(fNodes);

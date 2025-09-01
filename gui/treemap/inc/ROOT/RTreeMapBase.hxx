@@ -35,6 +35,8 @@ possible for visual clarity.
 
 Furthermore, we assume that each node has a type and that the size of a non-leaf node equals to the total size of its children. This
 allows for drawing a legend of types of leaf nodes, and see which types occupy how much of the total space.
+
+Note: this visualization class/technique is independent/unrelated to `TTree`.
 */
 // clang-format on
 class RTreeMapBase {
@@ -68,7 +70,6 @@ public:
    virtual ~RTreeMapBase() = default;
 
 protected:
-
    /////////////////////////////////////////////////////////////////////////////
    /// \brief Logic for drawing the entirety of the treemap.
    void DrawTreeMap(const Node &elem, Rect rect, int depth) const;

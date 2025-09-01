@@ -29,7 +29,7 @@ public:
       if (!holder)
          return nullptr;
 
-      return ROOT::Experimental::RTreeMapPainter::Import(
+      return ROOT::Experimental::RTreeMapPainter::ImportRNTuple(
             holder->GetFileName(), holder->GetTupleName());
    }
 };

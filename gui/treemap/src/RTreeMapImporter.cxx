@@ -32,10 +32,11 @@ static RTreeMapBase::Node CreateNode(const RNTupleInspector &insp, const ROOT::R
 
 static RTreeMapBase::Node CreateNode(const RNTupleInspector::RColumnInspector &colInsp, std::uint64_t childrenIdx)
 {
-   return {"", ROOT::Internal::RColumnElementBase::GetColumnTypeName(colInsp.GetType()),
-                             colInsp.GetCompressedSize(), childrenIdx, 0};
+   return {"", ROOT::Internal::RColumnElementBase::GetColumnTypeName(colInsp.GetType()), colInsp.GetCompressedSize(),
+           childrenIdx, 0};
 }
-std::unique_ptr<RTreeMapPainter> RTreeMapPainter::Import(const ROOT::Experimental::RNTupleInspector &insp)
+
+std::unique_ptr<RTreeMapPainter> RTreeMapPainter::ImportRNTuple(const ROOT::Experimental::RNTupleInspector &insp)
 {
    auto treemap = std::make_unique<RTreeMapPainter>();
    const auto &descriptor = insp.GetDescriptor();
@@ -81,8 +82,9 @@ std::unique_ptr<RTreeMapPainter> RTreeMapPainter::Import(const ROOT::Experimenta
    }
    return treemap;
 }
-std::unique_ptr<RTreeMapPainter> RTreeMapPainter::Import(std::string_view sourceFileName, std::string_view tupleName)
+
+std::unique_ptr<RTreeMapPainter> RTreeMapPainter::ImportRNTuple(std::string_view sourceFileName, std::string_view tupleName)
 {
    auto insp = RNTupleInspector::Create(tupleName, sourceFileName);
-   return RTreeMapPainter::Import(*insp);
+   return RTreeMapPainter::ImportRNTuple(*insp);
 }
