@@ -105,7 +105,7 @@ public:
       if (!b || !gPad)
          return;
       gPad->GetListOfPrimitives()->Clear();
-      fTreeMap = ROOT::Experimental::RTreeMapPainter::Import(*fInspector);
+      fTreeMap = ROOT::Experimental::RTreeMapPainter::ImportRNTuple(*fInspector);
       fTreeMap->Paint("");
       gPad->Update();
    }
