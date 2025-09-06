@@ -13,7 +13,7 @@
  * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
-#include <ROOT/RTreeMapBase.hxx>
+#include <RTreeMapBase.hxx>
 
 #include <cmath>
 #include <iomanip>

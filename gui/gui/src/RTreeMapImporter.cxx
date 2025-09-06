@@ -13,7 +13,8 @@
  * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
-#include <ROOT/RTreeMapPainter.hxx>
+#include <RTreeMapPainter.hxx>
+
 #include <ROOT/RNTupleInspector.hxx>
 #include <ROOT/RColumnElementBase.hxx>
 

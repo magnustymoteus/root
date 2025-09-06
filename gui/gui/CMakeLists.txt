@@ -104,6 +104,8 @@ ROOT_STANDARD_LIBRARY_PACKAGE(Gui
     TRootHelpDialog.h
     TVirtualDragManager.h
     WidgetMessageTypes.h
+    RTreeMapBase.hxx
+    RTreeMapPainter.hxx
   SOURCES
     src/HelpText.cxx
     src/TG3DLine.cxx
@@ -197,6 +199,9 @@ ROOT_STANDARD_LIBRARY_PACKAGE(Gui
     src/TRootGuiFactory.cxx
     src/TRootHelpDialog.cxx
     src/TVirtualDragManager.cxx
+    src/RTreeMapBase.cxx
+    src/RTreeMapImporter.cxx
+    src/RTreeMapPainter.cxx
   DICTIONARY_OPTIONS
     -writeEmptyRootPCM
   DEPENDENCIES
@@ -205,6 +210,7 @@ ROOT_STANDARD_LIBRARY_PACKAGE(Gui
     Graf
     MathCore
     ROOTNTupleBrowse
+    ROOTNTupleUtil
 )
 
 target_include_directories(Gui PRIVATE ${CMAKE_SOURCE_DIR}/gui/ged/inc)

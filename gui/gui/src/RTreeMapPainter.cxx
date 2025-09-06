@@ -13,7 +13,7 @@
  * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
-#include <ROOT/RTreeMapPainter.hxx>
+#include <RTreeMapPainter.hxx>
 
 #include <TCanvas.h>
 #include <TPad.h>

@@ -287,4 +287,7 @@
 #pragma link C++ class TGTextViewStreamBuf;
 #pragma link C++ class TGTextViewostream;
 
+#pragma link C++ class ROOT::Experimental::RTreeMapBase+;
+#pragma link C++ class ROOT::Experimental::RTreeMapPainter+;
+
 #endif
